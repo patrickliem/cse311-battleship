@@ -16,5 +16,6 @@ public class Driver {
 		
 		battleshipTextView.addController(battleshipController);
 		//battleshipGUIView.addController(battleshipController);
+
 	}
 }
