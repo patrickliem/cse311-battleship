@@ -1,5 +1,7 @@
 import java.awt.event.ActionEvent;
 
+import javax.swing.JButton;
+
 public class Controller implements java.awt.event.ActionListener {
 	
 	private Model model;
@@ -10,9 +12,11 @@ public class Controller implements java.awt.event.ActionListener {
 		
 	}
 	
+	// Note: probably do some validation of inputs here, and if it's bad tell view to do something
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		System.out.println("button pressed");
+		// this gets the data from the textfield in ViewText
+		System.out.println(((JButton)e.getSource()).getClientProperty("entryText"));
 		// change this obviously
 		model.setBoardValue(1, 1, 1, 's');;
 		
