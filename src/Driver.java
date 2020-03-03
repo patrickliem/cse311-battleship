@@ -2,20 +2,17 @@
 public class Driver {
 	
 	public static void main(String[] args) {
-		ViewText battleshipTextView = new ViewText();
-		//ViewGUI battleshipGUIView = new ViewGUI();
+		View battleshipView = new ViewText();
 		Model battleshipModel = new Model();
 		
-		battleshipModel.addObserver(battleshipTextView);
+		battleshipModel.addObserver(battleshipView);
 		
 		Controller battleshipController = new Controller();
 		battleshipController.addModel(battleshipModel);
-		battleshipController.addViewText(battleshipTextView);
-		//battleshipController.addViewGUI(battleshipGUIView);
+		battleshipController.addViewText(battleshipView);
 		battleshipController.initModel();
 		
-		battleshipTextView.addController(battleshipController);
-		//battleshipGUIView.addController(battleshipController);
+		battleshipView.addController(battleshipController);
 
 	}
 }

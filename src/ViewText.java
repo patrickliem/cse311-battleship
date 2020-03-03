@@ -19,9 +19,9 @@ import java.awt.event.WindowEvent;
 
 
 
-public class ViewText implements java.util.Observer {
+public class ViewText extends View {
 
-	private JFrame frame;
+	public JFrame frame;
 	private JLabel turnIndicator;
 	private JLabel enemyBoard;
 	private JLabel playerBoard;
@@ -53,7 +53,7 @@ public class ViewText implements java.util.Observer {
 		bottomPanel.add(actionLabel);
 		JPanel textfieldAndButtonPanel = new JPanel(new GridLayout(1, 2));
 		entryField = new JTextField(40);
-		entryField.addFocusListener(new FocusListener () {
+		entryField.addFocusListener(new FocusListener() {
 
 				@Override
 				public void focusGained(FocusEvent e) {
