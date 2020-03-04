@@ -9,6 +9,7 @@ import javax.swing.SwingConstants;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.Toolkit;
 import java.awt.event.ActionListener;
@@ -41,9 +42,11 @@ public class ViewText extends View {
 		JPanel boardDisplay = new JPanel(new GridLayout(3, 1));
 		
 		enemyBoard = new JLabel("", SwingConstants.CENTER);
+		enemyBoard.setFont(new Font("Courier New", Font.PLAIN, 12));
 		boardDisplay.add(enemyBoard);
 		
 		playerBoard = new JLabel("", SwingConstants.CENTER);
+		playerBoard.setFont(new Font("Courier New", Font.PLAIN, 12));
 		boardDisplay.add(playerBoard);
 		
 		outer.add(boardDisplay, BorderLayout.CENTER);
@@ -62,8 +65,7 @@ public class ViewText extends View {
 				@Override
 				public void focusLost(FocusEvent e) {
 					button.putClientProperty("entryText", entryField.getText());
-					System.out.println("here");
-					
+					entryField.setText("");
 				}
 				
 		});
@@ -94,7 +96,7 @@ public class ViewText extends View {
 		char[][] player1Board = data.getPlayer1board();
 		char[][] player2Board = data.getPlayer2board();
 		
-		String rowStr = "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;A B C D E F G H I J";
+		String rowStr = "&nbsp;&nbsp;&nbsp;A B C D E F G H I J";
 		
 		// see https://stackoverflow.com/questions/11037622/pass-variables-to-actionlistener-in-java
 		// for passing variables to the actionlistener
@@ -124,7 +126,7 @@ public class ViewText extends View {
 				String myBoard = "<html>My board:<br>" + rowStr + "<br>";
 				for (int i = 0; i < 10; i++) {
 					myBoard += (i+1) + "&nbsp;";
-					if (i != 9) myBoard += "&nbsp;&nbsp;";
+					if (i != 9) myBoard += "&nbsp;";
 					
 					for (int j = 0; j < 10; j++) {
 						
@@ -139,7 +141,7 @@ public class ViewText extends View {
 				for (int i = 0; i < 10; i++) {
 					
 					enemyBoard += (i+1) + "&nbsp;";
-					if (i != 9) enemyBoard += "&nbsp;&nbsp;";
+					if (i != 9) enemyBoard += "&nbsp;";
 					
 					for (int j = 0; j < 10; j++) {
 						enemyBoard += enemyBoardArray[i][j] + " ";
@@ -167,7 +169,7 @@ public class ViewText extends View {
 				String myBoard = "<html>My board:<br>" + rowStr + "<br>";
 				for (int i = 0; i < 10; i++) {
 					myBoard += (i+1) + "&nbsp;";
-					if (i != 9) myBoard += "&nbsp;&nbsp;";
+					if (i != 9) myBoard += "&nbsp;";
 					
 					for (int j = 0; j < 10; j++) {
 						
@@ -198,7 +200,6 @@ public class ViewText extends View {
 		
 		frame.revalidate();
 		frame.repaint();
-		System.out.println("updating");
 		
 	}
 	

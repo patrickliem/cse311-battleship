@@ -9,7 +9,7 @@ public class Driver {
 		
 		Controller battleshipController = new Controller();
 		battleshipController.addModel(battleshipModel);
-		battleshipController.addViewText(battleshipView);
+		battleshipController.addView(battleshipView);
 		battleshipController.initModel();
 		
 		battleshipView.addController(battleshipController);
