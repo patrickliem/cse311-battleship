@@ -6,6 +6,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
+import javax.swing.Timer;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
@@ -116,6 +117,7 @@ public class ViewText extends View {
 		// If the turn is not transitioning, then draw the boards
 		if (data.getTurn() != 3) {
 			entryField.setEditable(true);
+			entryField.grabFocus();
 			
 			
 			// This is how to draw the board if we are not in the setup phase
@@ -155,14 +157,20 @@ public class ViewText extends View {
 					if (i != 9) enemyBoard += "&nbsp;";
 					
 					for (int j = 0; j < 10; j++) {
-						if (enemyBoardArray[i][j] != 'a' &&
-							enemyBoardArray[i][j] != 'b' &&
-							enemyBoardArray[i][j] != 'c' &&
-							enemyBoardArray[i][j] != 'd' &&
-							enemyBoardArray[i][j] != 'e')
-							enemyBoard += enemyBoardArray[i][j] + " ";
-						else
+						if (enemyBoardArray[i][j] == 'A' ||
+							enemyBoardArray[i][j] == 'B' ||
+							enemyBoardArray[i][j] == 'C' ||
+							enemyBoardArray[i][j] == 'D' ||
+							enemyBoardArray[i][j] == 'E')
+						enemyBoard += "h&nbsp;";
+						else if (enemyBoardArray[i][j] == 'a' ||
+							enemyBoardArray[i][j] == 'b' ||
+							enemyBoardArray[i][j] == 'c' ||
+							enemyBoardArray[i][j] == 'd' ||
+							enemyBoardArray[i][j] == 'e')
 							enemyBoard += "~&nbsp;";
+						else
+							enemyBoard += enemyBoardArray[i][j] + " ";
 					}
 					enemyBoard += "<br>";
 				}
@@ -228,6 +236,12 @@ public class ViewText extends View {
 	// This method can be called by Controller to display an error message
 	public void displayError(String errText) {
 		errorLabel.setText("<html><div style='color:red;'>" + errText + "</div></html>");
+		frame.revalidate();
+		frame.repaint();
+	}
+	
+	public void displayConfirmation(String confText) {
+		errorLabel.setText("<html><div style='color:red;'>" + confText + "</div></html>");
 		frame.revalidate();
 		frame.repaint();
 	}

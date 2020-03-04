@@ -7,6 +7,8 @@ public abstract class View implements Observer {
 	
 	public abstract void clearError();
 	
+	public abstract void displayConfirmation(String confText);
+	
 	public abstract void addController(ActionListener controller);
 	
 	public abstract void update(Observable o, Object arg);

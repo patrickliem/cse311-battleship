@@ -1,7 +1,7 @@
 
 public class Model extends java.util.Observable {
 	// ~ is water, a is the 5 length, b is the 4 length, c is the 3 length
-	// d is the other 3 length, e is the 2 length, h is a hit ship, m is a missed shot, x is a sunken ship
+	// d is the other 3 length, e is the 2 length, capital letter is a hit ship, m is a missed shot, x is a sunken ship
 	private char[][] player1board;
 	private char[][] player2board;
 	// 0 is no winner, 1 is player 1, 2 is player 2

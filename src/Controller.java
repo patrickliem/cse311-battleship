@@ -25,7 +25,12 @@ public class Controller implements java.awt.event.ActionListener {
 			String entryText = ((JButton)e.getSource()).getClientProperty("entryText").toString();
 
 			String[] entryTextElements = entryText.split(" ");
-			if (entryTextElements.length != 3) {
+			if (entryTextElements.length != 3 && model.isSetup()) {
+				currentView.displayError("Please enter a valid string");
+				return;
+			}
+			
+			if (entryTextElements.length != 2 && !model.isSetup()) {
 				currentView.displayError("Please enter a valid string");
 				return;
 			}
@@ -124,10 +129,42 @@ public class Controller implements java.awt.event.ActionListener {
 
 			// If we are not in the setup phase, check for hits
 			} else {
-				if (model.getBoardValue(currentTurn, row-1, col-1) == 's') {
+				int enemy;
+				
+				if (currentTurn == 1) enemy = 2;
+				else enemy = 1;
+				
+				// If we hit, change that board value to 'h'
+				if (model.getBoardValue(enemy, row-1, col-1) == 'a' ||
+					model.getBoardValue(enemy, row-1, col-1) == 'b' ||
+					model.getBoardValue(enemy, row-1, col-1) == 'c' ||
+					model.getBoardValue(enemy, row-1, col-1) == 'd' ||
+					model.getBoardValue(enemy, row-1, col-1) == 'e') {
+					
+					char ship = model.getBoardValue(enemy, row-1, col-1);
+					
+					model.setBoardValue(enemy, row-1, col-1, Character.toUpperCase(model.getBoardValue(enemy, row-1, col-1)));
+					
+					String confirmation = "You hit a ship!";
+					
+					// If we sunk a ship, mark it as so
+					if (!checkForShip(enemy, ship)) {
+						sinkShip(enemy, ship);
+						confirmation = "You sunk a ship!";
+					}			
+					currentView.displayConfirmation(confirmation);
+					
+					// If there is a winner, do something
+					if (!checkForAnyShips(enemy)) {
+						model.setWinner(currentTurn);
+						return;
+					}
+					
 					
 				} else {
+					model.setBoardValue(enemy, row-1, col-1, 'm');
 					
+					currentView.displayConfirmation("You missed!");
 				}
 				
 				if (currentTurn == 1) {
@@ -146,13 +183,69 @@ public class Controller implements java.awt.event.ActionListener {
 		}
 
 	}
+	
+	private boolean checkForAnyShips(int boardNum) {
+		char[][] board;
+		if (boardNum == 1) board = model.getPlayer1board();
+		else board = model.getPlayer2board();
+		
+		for (int i = 0; i < board.length; i++) {
+			for (int j = 0; j < board[i].length; j++) {
+				if (board[i][j] == 'a' ||
+					board[i][j] == 'b' ||
+					board[i][j] == 'c' ||
+					board[i][j] == 'd' ||
+					board[i][j] == 'e') 
+					return true;
+			}
+		}
+		
+		return false;
+	}
+	
+	// Takes a board number and a type of ship, and replaces all hit instances of that ship
+	// with x, the sunken ship indicator
+	private void sinkShip(int boardNum, char ship) {
+		char sunkenShip = Character.toUpperCase(ship);
+		char[][] board;
+		if (boardNum == 1) board = model.getPlayer1board();
+		else board = model.getPlayer2board();
+		
+		for (int i = 0; i < board.length; i++) {
+			for (int j = 0; j < board[i].length; j++) {
+				if (board[i][j] == sunkenShip) board[i][j] = 'x';
+			}
+		}
+		
+	}
+	
+	// Takes a board number and a type of ship, and checks whether any of that type of ship remain
+	private boolean checkForShip(int boardNum, char ship) {
+		char[][] board;
+		if (boardNum == 1) board = model.getPlayer1board();
+		else board = model.getPlayer2board();
+		
+		for (int i = 0; i < board.length; i++) {
+			for (int j = 0; j < board[i].length; j++) {
+				if (board[i][j] == ship) return true;
+			}
+		}
+		
+		return false;
+	}
 
-	private boolean validatePlacement(int turn, int row, int col, int shipSize, String orientation) {
+	// Takes a board number, row, column, ship size, and orientation, and returns true if it is a valid
+	// place to put a ship, and false otherwise
+	private boolean validatePlacement(int board, int row, int col, int shipSize, String orientation) {
 
 		for (int i = 0; i < shipSize; i++) {
 			if (row < 0 || row > 9 || col < 0 || col > 9) return false;
 
-			if (model.getBoardValue(turn, row, col) == 's') {
+			if (model.getBoardValue(board, row, col) == 'a' ||
+				model.getBoardValue(board, row, col) == 'b' ||
+				model.getBoardValue(board, row, col) == 'c' ||
+				model.getBoardValue(board, row, col) == 'd' ||
+				model.getBoardValue(board, row, col) == 'e') {
 				return false;
 			}
 
@@ -163,6 +256,7 @@ public class Controller implements java.awt.event.ActionListener {
 		return true;
 	}
 
+	// Converts the letter of a column to its integer representation (e.g. A to 1, B to 2, etc.)
 	private int convertLetterToInt(String letter) {
 		switch(letter) {
 		case "A":
@@ -191,6 +285,7 @@ public class Controller implements java.awt.event.ActionListener {
 	}
 
 
+	// Methods for setting up the MVC architecture
 	public void addModel(Model m){
 		this.model = m;
 	}
@@ -198,7 +293,6 @@ public class Controller implements java.awt.event.ActionListener {
 	public void addView(View v){
 		currentView = v;
 	}
-
 
 	// Updates the model trivially to make it send a message to observers
 	public void initModel(){
