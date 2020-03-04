@@ -12,14 +12,16 @@ public class Controller implements java.awt.event.ActionListener {
 	Controller() {
 	}
 
-	// Note: probably do some validation of inputs here, and if it's bad tell view to do something
+	// Take the input from the view and process it
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		// this gets the data from the textfield in ViewText
-		// consider changing this to JComponent and focuslistener instead of action listener
+		
+		currentView.clearError();
 
 		if (model.getTurn() != 3) {
-
+			
+			// this gets the data from the textfield in ViewText
+			// consider changing this to JComponent and focuslistener instead of action listener
 			String entryText = ((JButton)e.getSource()).getClientProperty("entryText").toString();
 
 			String[] entryTextElements = entryText.split(" ");
@@ -69,9 +71,7 @@ public class Controller implements java.awt.event.ActionListener {
 						
 						return;
 						
-					}
-					
-					
+					}	
 					
 					for (int i = 0; i < currentShip; i++) {
 						model.setBoardValue(currentTurn, row-1, col-1, 's');

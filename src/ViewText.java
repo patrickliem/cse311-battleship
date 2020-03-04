@@ -18,8 +18,6 @@ import java.awt.event.FocusListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
-
-
 public class ViewText extends View {
 
 	public JFrame frame;
@@ -27,6 +25,7 @@ public class ViewText extends View {
 	private JLabel enemyBoard;
 	private JLabel playerBoard;
 	private JLabel actionLabel;
+	private JLabel errorLabel;
 	private JTextField entryField;
 	private JButton button;
 	
@@ -51,7 +50,9 @@ public class ViewText extends View {
 		
 		outer.add(boardDisplay, BorderLayout.CENTER);
 
-		JPanel bottomPanel = new JPanel(new GridLayout(2, 1));
+		JPanel bottomPanel = new JPanel(new GridLayout(3, 1));
+		errorLabel = new JLabel("");
+		bottomPanel.add(errorLabel);
 		actionLabel = new JLabel("Please enter the letter and number of the tile you wish to shoot (e.g. A 1):");
 		bottomPanel.add(actionLabel);
 		JPanel textfieldAndButtonPanel = new JPanel(new GridLayout(1, 2));
@@ -69,6 +70,7 @@ public class ViewText extends View {
 				}
 				
 		});
+		
 		textfieldAndButtonPanel.add(entryField);
 		
 		button = new JButton("Submit");
@@ -79,7 +81,6 @@ public class ViewText extends View {
 		outer.add(bottomPanel, BorderLayout.SOUTH);
 		
 		frame.add(outer);
-
 
 		frame.addWindowListener(new CloseListener());	
 		frame.setSize(700,700);
@@ -144,12 +145,19 @@ public class ViewText extends View {
 					if (i != 9) enemyBoard += "&nbsp;";
 					
 					for (int j = 0; j < 10; j++) {
-						enemyBoard += enemyBoardArray[i][j] + " ";
+						if (enemyBoardArray[i][j] != 's')
+							enemyBoard += enemyBoardArray[i][j] + " ";
+						else
+							enemyBoard += "~&nbsp;";
 					}
 					enemyBoard += "<br>";
 				}
 				enemyBoard += "</html>";
 				this.enemyBoard.setText(enemyBoard);
+				
+				actionLabel.setText("<html>Enter where you wish to fire <br>"
+						+ "For example, A 1 will fire a shot at tile A 1</html>");
+				
 			} else {
 				// This is how to draw the board if we are in the setup phase
 				char[][] myBoardArray;
@@ -205,7 +213,13 @@ public class ViewText extends View {
 	
 	// This method can be called by Controller to display an error message
 	public void displayError(String errText) {
-		actionLabel.setText(actionLabel.getText().substring(0, actionLabel.getText().length() - 7) + "<br><div style='color:red;'>" + errText + "</div></html>");
+		errorLabel.setText("<html><div style='color:red;'>" + errText + "</div></html>");
+		frame.revalidate();
+		frame.repaint();
+	}
+	
+	public void clearError() {
+		errorLabel.setText("");
 		frame.revalidate();
 		frame.repaint();
 	}

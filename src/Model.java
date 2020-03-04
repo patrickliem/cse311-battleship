@@ -1,6 +1,6 @@
 
 public class Model extends java.util.Observable {
-	// ~ is water, s is ship, h is a hit ship
+	// ~ is water, s is ship, h is a hit ship, m is a missed shot
 	private char[][] player1board;
 	private char[][] player2board;
 	// 0 is no winner, 1 is player 1, 2 is player 2
@@ -46,7 +46,6 @@ public class Model extends java.util.Observable {
 		notifyObservers();
 
 		//clearChanged() ????
-
 	}
 	
 	public char getBoardValue(int player, int row, int col) {
