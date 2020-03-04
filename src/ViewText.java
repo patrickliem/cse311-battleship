@@ -101,6 +101,16 @@ public class ViewText extends View {
 		
 		// see https://stackoverflow.com/questions/11037622/pass-variables-to-actionlistener-in-java
 		// for passing variables to the actionlistener
+
+		if (data.getWinner() != 0) {
+			turnIndicator.setText("");
+			enemyBoard.setText("");
+			playerBoard.setText("Player " + data.getWinner() + " wins!");
+			entryField.setEditable(false);
+			actionLabel.setText("");
+			button.setEnabled(false);
+			return;
+		}
 		
 
 		// If the turn is not transitioning, then draw the boards
@@ -145,7 +155,11 @@ public class ViewText extends View {
 					if (i != 9) enemyBoard += "&nbsp;";
 					
 					for (int j = 0; j < 10; j++) {
-						if (enemyBoardArray[i][j] != 's')
+						if (enemyBoardArray[i][j] != 'a' &&
+							enemyBoardArray[i][j] != 'b' &&
+							enemyBoardArray[i][j] != 'c' &&
+							enemyBoardArray[i][j] != 'd' &&
+							enemyBoardArray[i][j] != 'e')
 							enemyBoard += enemyBoardArray[i][j] + " ";
 						else
 							enemyBoard += "~&nbsp;";
