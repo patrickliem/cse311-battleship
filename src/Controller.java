@@ -1,6 +1,6 @@
 import java.awt.event.ActionEvent;
 
-import javax.swing.JButton;
+import javax.swing.JComponent;
 
 public class Controller implements java.awt.event.ActionListener {
 
@@ -22,7 +22,7 @@ public class Controller implements java.awt.event.ActionListener {
 
 			// this gets the data from the textfield in ViewText
 			// consider changing this to JComponent and focuslistener instead of action listener
-			String entryText = ((JButton)e.getSource()).getClientProperty("entryText").toString();
+			String entryText = ((JComponent)e.getSource()).getClientProperty("entryText").toString();
 
 			String[] entryTextElements = entryText.split(" ");
 			if (entryTextElements.length != 3 && model.isSetup()) {
