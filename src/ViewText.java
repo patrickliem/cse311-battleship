@@ -12,10 +12,8 @@ import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.Toolkit;
-import java.awt.event.ActionListener;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
-import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
@@ -277,8 +275,8 @@ public class ViewText extends View {
 	}
 	
 	// Used for setting up the MVC architecture
-	public void addController(ActionListener controller){
-		button.addActionListener(controller);	//need instance of controller before can add it as a listener 
+	public void addController(MouseListener controller){
+		button.addMouseListener(controller);	//need instance of controller before can add it as a listener 
 	}
 	
 	// Makes sure we exit nicely

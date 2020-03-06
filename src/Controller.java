@@ -1,189 +1,236 @@
-import java.awt.event.ActionEvent;
+import java.awt.event.MouseEvent;
 
 import javax.swing.JComponent;
 
-public class Controller implements java.awt.event.ActionListener {
+public class Controller implements java.awt.event.MouseListener {
 
+	// Our representations of the Model and View
 	private Model model;
 	private View currentView;
-
-
-
-	Controller() {
-	}
-
-	// Take the input from the view and process it
+	
+	// This is called when the View sends a message to the Controller
 	@Override
-	public void actionPerformed(ActionEvent e) {
-
+	public void mouseClicked(MouseEvent e) {
 		currentView.clearError();
 
+		// If we are not in a transition phase
 		if (model.getTurn() != 3) {
 
-			// this gets the data from the textfield in ViewText
-			// consider changing this to JComponent and focuslistener instead of action listener
+			// This gets the data from View as a String
+			// The String should be formatted as such:
+			// If we are in setup phase, it should be <col> <row> <orientation>, e.g. A 1 R
+			// Valid orientations are R and D (right and down)
+			// If we are not in setup phase, it should be <col> <row>, e.g. A 1
 			String entryText = ((JComponent)e.getSource()).getClientProperty("entryText").toString();
 
 			String[] entryTextElements = entryText.split(" ");
-			if (entryTextElements.length != 3 && model.isSetup()) {
-				currentView.displayError("Please enter a valid string");
-				return;
-			}
 			
-			if (entryTextElements.length != 2 && !model.isSetup()) {
-				currentView.displayError("Please enter a valid string");
+			if (!validateEntryStringLength(entryTextElements)) {
 				return;
 			}
 
 			int currentTurn = model.getTurn();
 			int col = convertLetterToInt(entryTextElements[0].toUpperCase());
 			int row = -1;
-
-			if (col == -1) {
-				currentView.displayError("Please enter a valid column.");
+			
+			if (!validateColumn(col)) {
 				return;
 			}
 
-			try {
-				row = Integer.parseInt(entryTextElements[1]);	
-			} catch(NumberFormatException excep) {
-				currentView.displayError("Please enter a valid row.");
+			if (!validateRow(entryTextElements[1])) {
 				return;
 			}
+			row = Integer.parseInt(entryTextElements[1]);
 
-			// Different behaviors depending on whether we are in the setup phase or not
+			// If we are in the setup phase, place the ship
 			if (model.isSetup()) {
 
-				String orientation = entryTextElements[2];
-
-				if (!(orientation.equals("R") || orientation.equals("D"))) {
-					currentView.displayError("Please enter a valid orientation.");
-					return;
-				}
-
-				int currentShip;
-
-				if (currentTurn == 1) {
-					currentShip = model.getNextUnplaced1();
-					model.decrementUnplaced1();
-				} else {
-					currentShip = model.getNextUnplaced2();
-					model.decrementUnplaced2();
-				}
-
-				if (!validatePlacement(currentTurn, row-1, col-1, currentShip, orientation)) {
-
-					if (currentTurn == 1) model.incrementUnplaced1();
-					else model.incrementUnplaced2();
-
-					currentView.displayError("Please choose a valid place for your ship");
-
-					return;
-
-				}	
+				String orientation = entryTextElements[2].toUpperCase();
 				
-				for (int i = 0; i < currentShip; i++) {
-					
-					char shipChar;
-					int unplacedNumber;
-					
-					if (currentTurn == 1) unplacedNumber = model.getUnplacedNumber1();
-					else unplacedNumber = model.getUnplacedNumber2();
-					unplacedNumber++;
-					
-					switch(unplacedNumber) {
-					case(5):
-						shipChar = 'a';
-						break;
-					case(4):
-						shipChar = 'b';
-						break;
-					case(3):
-						shipChar = 'c';
-						break;
-					case(2):
-						shipChar = 'd';
-						break;
-					case(1):
-						shipChar = 'e';
-						break;
-					default:
-						shipChar = '?';
-					}
-					
-					model.setBoardValue(currentTurn, row-1, col-1, shipChar);
-					if (orientation.equals("R")) col++;
-					else row++;
+				if (!validateOrientation(orientation)) {
+					return;
 				}
+				
+				placeShip(currentTurn, row, col, orientation);
 
-				if (currentTurn == 1 && model.getUnplacedNumber1() < 1) {
-					model.setNextTurn(2);
-					model.setTurn(3);
-				}
-
-				if (currentTurn == 2 && model.getUnplacedNumber2() < 1) {
-					model.setNextTurn(1);
-					model.setTurn(3);
-					model.setSetup(false);
-				}
-
-			// If we are not in the setup phase, check for hits
+			// If we are not in the setup phase, check for hits and setup the turn transition
 			} else {
-				int enemy;
-				
-				if (currentTurn == 1) enemy = 2;
-				else enemy = 1;
-				
-				// If we hit, change that board value to 'h'
-				if (model.getBoardValue(enemy, row-1, col-1) == 'a' ||
-					model.getBoardValue(enemy, row-1, col-1) == 'b' ||
-					model.getBoardValue(enemy, row-1, col-1) == 'c' ||
-					model.getBoardValue(enemy, row-1, col-1) == 'd' ||
-					model.getBoardValue(enemy, row-1, col-1) == 'e') {
-					
-					char ship = model.getBoardValue(enemy, row-1, col-1);
-					
-					model.setBoardValue(enemy, row-1, col-1, Character.toUpperCase(model.getBoardValue(enemy, row-1, col-1)));
-					
-					String confirmation = "You hit a ship!";
-					
-					// If we sunk a ship, mark it as so
-					if (!checkForShip(enemy, ship)) {
-						sinkShip(enemy, ship);
-						confirmation = "You sunk a ship!";
-					}			
-					currentView.displayConfirmation(confirmation);
-					
-					// If there is a winner, do something
-					if (!checkForAnyShips(enemy)) {
-						model.setWinner(currentTurn);
-						return;
-					}
-					
-					
-				} else {
-					model.setBoardValue(enemy, row-1, col-1, 'm');
-					
-					currentView.displayConfirmation("You missed!");
-				}
-				
-				if (currentTurn == 1) {
-					model.setNextTurn(2);
-					model.setTurn(3);
-				} else {
-					model.setNextTurn(1);
-					model.setTurn(3);
-				}
-
+				checkForHits(currentTurn, row, col);	
+				setNextTurnIfGoingIntoTransition(currentTurn);
 			}
-
 
 		} else {
 			model.setTurn(model.getNextTurn());
 		}
-
+		
 	}
 	
+	// Takes a string and checks whether it is a valid orientation or not
+	private boolean validateOrientation(String orientation) {
+		if (!(orientation.equals("R") || orientation.equals("D"))) {
+			currentView.displayError("Please enter a valid orientation.");
+			return false;
+		}
+		return true;
+	}
+	
+	// Takes a string and checks if it is a valid row (i.e. if it is a number)
+	private boolean validateRow(String row) {
+		try {
+			Integer.parseInt(row);	
+		} catch(NumberFormatException excep) {
+			currentView.displayError("Please enter a valid row.");
+			return false;
+		}
+		return true;
+	}
+	
+	// Takes an integer and checks if it is a valid column
+	private boolean validateColumn(int col) {
+		if (col == -1) {
+			currentView.displayError("Please enter a valid column.");
+			return false;
+		}
+		return true;
+	}
+	
+	// Takes an entry string from the View, and checks whether it has the correct length
+	private boolean validateEntryStringLength(String[] entryTextElements) {
+		if (entryTextElements.length != 3 && model.isSetup()) {
+			currentView.displayError("Please enter a valid string");
+			return false;
+		}
+		
+		if (entryTextElements.length != 2 && !model.isSetup()) {
+			currentView.displayError("Please enter a valid string");
+			return false;
+		}
+		
+		return true;
+	}
+	
+	// Takes the currentTurn, a row, a column, and an orientation, and places a ship at that place
+	private void placeShip(int currentTurn, int row, int col, String orientation) {
+		int currentShip;
+
+		if (currentTurn == 1) {
+			currentShip = model.getNextUnplaced1();
+			model.decrementUnplaced1();
+		} else {
+			currentShip = model.getNextUnplaced2();
+			model.decrementUnplaced2();
+		}
+
+		if (!validatePlacement(currentTurn, row-1, col-1, currentShip, orientation)) {
+
+			if (currentTurn == 1) model.incrementUnplaced1();
+			else model.incrementUnplaced2();
+
+			currentView.displayError("Please choose a valid place for your ship");
+
+			return;
+
+		}	
+		
+		for (int i = 0; i < currentShip; i++) {
+			
+			char shipChar;
+			int unplacedNumber;
+			
+			if (currentTurn == 1) unplacedNumber = model.getUnplacedNumber1();
+			else unplacedNumber = model.getUnplacedNumber2();
+			unplacedNumber++;
+			
+			shipChar = convertNumToShipChar(unplacedNumber);
+			
+			model.setBoardValue(currentTurn, row-1, col-1, shipChar);
+			if (orientation.equals("R")) col++;
+			else row++;
+		}
+
+		if (currentTurn == 1 && model.getUnplacedNumber1() < 1) {
+			model.setNextTurn(2);
+			model.setTurn(3);
+		}
+
+		if (currentTurn == 2 && model.getUnplacedNumber2() < 1) {
+			model.setNextTurn(1);
+			model.setTurn(3);
+			model.setSetup(false);
+		}
+	}
+	
+	// Takes the current turn, a row, and a column and checks if any ships are hit. Adjusts model and view accordingly
+	private void checkForHits(int currentTurn, int row, int col) {
+		int enemy;
+		
+		if (currentTurn == 1) enemy = 2;
+		else enemy = 1;
+		
+		// If we hit, change that board value to 'h'
+		if (model.getBoardValue(enemy, row-1, col-1) == 'a' ||
+			model.getBoardValue(enemy, row-1, col-1) == 'b' ||
+			model.getBoardValue(enemy, row-1, col-1) == 'c' ||
+			model.getBoardValue(enemy, row-1, col-1) == 'd' ||
+			model.getBoardValue(enemy, row-1, col-1) == 'e') {
+			
+			char ship = model.getBoardValue(enemy, row-1, col-1);
+			
+			model.setBoardValue(enemy, row-1, col-1, Character.toUpperCase(model.getBoardValue(enemy, row-1, col-1)));
+			
+			String confirmation = "You hit a ship!";
+			
+			// If we sunk a ship, mark it as so
+			if (!checkForShip(enemy, ship)) {
+				sinkShip(enemy, ship);
+				confirmation = "You sunk a ship!";
+			}			
+			currentView.displayConfirmation(confirmation);
+			
+			// If there is a winner, do something
+			if (!checkForAnyShips(enemy)) {
+				model.setWinner(currentTurn);
+				return;
+			}
+			
+			
+		} else {
+			model.setBoardValue(enemy, row-1, col-1, 'm');
+			
+			currentView.displayConfirmation("You missed!");
+		}
+	}
+	
+	// Sets up the turn order so that the transition turn is handled correctly
+	private void setNextTurnIfGoingIntoTransition(int currentTurn) {		
+		if (currentTurn == 1) {
+			model.setNextTurn(2);
+			model.setTurn(3);
+		} else {
+			model.setNextTurn(1);
+			model.setTurn(3);
+		}
+	}
+	
+	// Converts a number to its ship character representation
+	private char convertNumToShipChar(int num) {
+		switch(num) {
+		case(5):
+			return 'a';
+		case(4):
+			return 'b';
+		case(3):
+			return 'c';
+		case(2):
+			return 'd';
+		case(1):
+			return 'e';
+		default:
+			return '?';
+		}
+	}
+
+	// Takes a board number, and checks if there are any non-sunken ships left on that board
 	private boolean checkForAnyShips(int boardNum) {
 		char[][] board;
 		if (boardNum == 1) board = model.getPlayer1board();
@@ -258,7 +305,7 @@ public class Controller implements java.awt.event.ActionListener {
 
 	// Converts the letter of a column to its integer representation (e.g. A to 1, B to 2, etc.)
 	private int convertLetterToInt(String letter) {
-		switch(letter) {
+		switch(letter.toUpperCase()) {
 		case "A":
 			return 1;
 		case "B":
@@ -297,5 +344,27 @@ public class Controller implements java.awt.event.ActionListener {
 	// Updates the model trivially to make it send a message to observers
 	public void initModel(){
 		model.setBoardValue(1, 1, 1, '~');
+	}
+	
+	// Required empty methods for the MouseListener interface
+	@Override
+	public void mousePressed(MouseEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+	@Override
+	public void mouseReleased(MouseEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+	@Override
+	public void mouseEntered(MouseEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+	@Override
+	public void mouseExited(MouseEvent e) {
+		// TODO Auto-generated method stub
+		
 	}
 }
