@@ -22,6 +22,7 @@ public class Controller implements java.awt.event.MouseListener {
 			// Valid orientations are R and D (right and down)
 			// If we are not in setup phase, it should be <col> <row>, e.g. A 1
 			String entryText = ((JComponent)e.getSource()).getClientProperty("entryText").toString();
+			((JComponent)e.getSource()).putClientProperty("entryText", "");
 
 			String[] entryTextElements = entryText.split(" ");
 			
@@ -55,7 +56,9 @@ public class Controller implements java.awt.event.MouseListener {
 
 			// If we are not in the setup phase, check for hits and setup the turn transition
 			} else {
-				checkForHits(currentTurn, row, col);	
+				if (!checkForHits(currentTurn, row, col)) {
+					return;
+				}
 				setNextTurnIfGoingIntoTransition(currentTurn);
 			}
 
@@ -161,7 +164,8 @@ public class Controller implements java.awt.event.MouseListener {
 	}
 	
 	// Takes the current turn, a row, and a column and checks if any ships are hit. Adjusts model and view accordingly
-	private void checkForHits(int currentTurn, int row, int col) {
+	// Returns true if the turn order should continue, and false otherwise
+	private boolean checkForHits(int currentTurn, int row, int col) {
 		int enemy;
 		
 		if (currentTurn == 1) enemy = 2;
@@ -190,14 +194,21 @@ public class Controller implements java.awt.event.MouseListener {
 			// If there is a winner, do something
 			if (!checkForAnyShips(enemy)) {
 				model.setWinner(currentTurn);
-				return;
+				return false;
 			}
 			
+			return true;
 			
+			
+		} else if(model.getBoardValue(enemy, row-1, col-1) != '~') {
+			currentView.displayError("Please enter a tile you have not shot at yet!");
+			return false;
 		} else {
 			model.setBoardValue(enemy, row-1, col-1, 'm');
 			
 			currentView.displayConfirmation("You missed!");
+			
+			return true;
 		}
 	}
 	
