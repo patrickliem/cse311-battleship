@@ -12,6 +12,7 @@ public class Controller implements java.awt.event.MouseListener {
 	@Override
 	public void mouseClicked(MouseEvent e) {
 		currentView.clearError();
+		currentView.clearConfirmation();
 
 		// If we are not in a transition phase
 		if (model.getTurn() != 3) {

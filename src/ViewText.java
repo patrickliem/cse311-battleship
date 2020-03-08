@@ -25,7 +25,7 @@ public class ViewText extends View {
 	private JLabel enemyBoard;
 	private JLabel playerBoard;
 	private JLabel actionLabel;
-	private JLabel errorLabel;
+	public JLabel errorLabel;
 	private JTextField entryField;
 	private JButton button;
 	
@@ -285,6 +285,14 @@ public class ViewText extends View {
 			e.getWindow().setVisible(false);
 			System.exit(0);
 		}
+	}
+
+	@Override
+	public void clearConfirmation() {
+		errorLabel.setText("");
+		entryField.grabFocus();
+		frame.revalidate();
+		frame.repaint();	
 	}
 
 }
