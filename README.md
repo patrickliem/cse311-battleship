@@ -1,7 +1,7 @@
 # cse311-battleship
 
 ## Project Structure
-cse311-battleship contains the Eclipse project for this project. There are 4 classes: Model.java, Controller.java, ViewGUI.java, ViewText.Java, and Driver.java
+cse311-battleship contains the Eclipse project for this project. There are 7 classes: Model.java, Controller.java, ViewGUI.java, ViewText.java, View.java, Driver.java, and BattleshipTest.java. Model, Controller, ViewGUI, and ViewText are the actual components of the MVC system. View is an abstract class that is a parent of ViewText and ViewGUI. Driver contains the main method that starts the game. BattleshipTest contains JUnit tests that test each component.
 
 ## How to play
 
