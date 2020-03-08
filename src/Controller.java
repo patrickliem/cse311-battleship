@@ -43,7 +43,7 @@ public class Controller implements java.awt.event.MouseListener {
 				return;
 			}
 			row = Integer.parseInt(entryTextElements[1]);
-
+			
 			// If we are in the setup phase, place the ship
 			if (model.isSetup()) {
 
@@ -361,22 +361,14 @@ public class Controller implements java.awt.event.MouseListener {
 	// Required empty methods for the MouseListener interface
 	@Override
 	public void mousePressed(MouseEvent e) {
-		// TODO Auto-generated method stub
-		
 	}
 	@Override
 	public void mouseReleased(MouseEvent e) {
-		// TODO Auto-generated method stub
-		
 	}
 	@Override
 	public void mouseEntered(MouseEvent e) {
-		// TODO Auto-generated method stub
-		
 	}
 	@Override
 	public void mouseExited(MouseEvent e) {
-		// TODO Auto-generated method stub
-		
 	}
 }
