@@ -1,4 +1,6 @@
+import javax.swing.BorderFactory;
 import javax.swing.JButton;
+import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
@@ -10,6 +12,7 @@ import java.util.Observable;
 
 public class ViewGUI extends View{
 	public JFrame frame;
+	public JPanel pane;
 	
 	//messing around with graphics we shall see what happens here
 	private void paintBoards(Graphics g) {
@@ -20,6 +23,7 @@ public class ViewGUI extends View{
              for (int row = 0; row < 10; row++) {
             	 g.setColor(Color.blue);
                  g.fillRect(col, row, 50, 50);
+                 pane.setBorder(BorderFactory.createLineBorder(Color.black));
             }
          }
 		//player grid 10 x 10 (no labels) filled blue for water
