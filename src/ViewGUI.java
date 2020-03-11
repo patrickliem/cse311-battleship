@@ -10,6 +10,8 @@ import java.awt.GridLayout;
 import java.awt.event.MouseListener;
 import java.util.Observable;
 
+// hey patrick can you see these changes????
+
 public class ViewGUI extends View{
 	public JFrame frame;
 	public JPanel pane;
