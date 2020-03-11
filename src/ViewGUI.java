@@ -10,7 +10,6 @@ import java.awt.GridLayout;
 import java.awt.event.MouseListener;
 import java.util.Observable;
 
-// hey patrick can you see these changes????
 
 public class ViewGUI extends View{
 	public JFrame frame;
@@ -48,10 +47,7 @@ public class ViewGUI extends View{
 		frame.setLocationRelativeTo(null);
 		frame.setBackground(Color.LIGHT_GRAY);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		frame.setVisible(true);
-		
-		
-		 
+		frame.setVisible(true); 
 	}
 	
 	
