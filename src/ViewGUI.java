@@ -5,9 +5,13 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.GridLayout;
+import java.awt.Toolkit;
 import java.awt.event.MouseListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.util.Observable;
 
 
@@ -41,13 +45,15 @@ public class ViewGUI extends View{
 	
 	public ViewGUI() {
 		frame = new JFrame("Battleship (GUI Version)");
+		
+				
+		
 		//size same as ViewText for now
 		frame.setSize(700,700);
-		frame.getContentPane().add(frame, new ViewGUI());
-		frame.setLocationRelativeTo(null);
-		frame.setBackground(Color.LIGHT_GRAY);
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		frame.setVisible(true); 
+		frame.addWindowListener(new CloseListener());
+		Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
+		frame.setLocation(dim.width/2-frame.getSize().width/2, dim.height/2-frame.getSize().height/2);
+		frame.setVisible(true);
 	}
 	
 	
@@ -85,6 +91,14 @@ public class ViewGUI extends View{
 	public void clearConfirmation() {
 		// TODO Auto-generated method stub
 		
+	}
+	
+	// Makes sure we exit nicely
+	public static class CloseListener extends WindowAdapter {
+		public void windowClosing(WindowEvent e) {
+			e.getWindow().setVisible(false);
+			System.exit(0);
+		}
 	}
 
 }
