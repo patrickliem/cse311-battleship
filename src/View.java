@@ -9,6 +9,8 @@ public abstract class View implements Observer {
 	
 	public abstract void displayConfirmation(String confText);
 	
+	public abstract void clearConfirmation();
+	
 	public abstract void addController(MouseListener controller);
 	
 	public abstract void update(Observable o, Object arg);

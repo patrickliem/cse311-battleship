@@ -83,4 +83,10 @@ public class ViewGUI extends View{
 		
 	}
 
+	@Override
+	public void clearConfirmation() {
+		// TODO Auto-generated method stub
+		
+	}
+
 }

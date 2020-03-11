@@ -12,17 +12,28 @@ public class Controller implements java.awt.event.MouseListener {
 	@Override
 	public void mouseClicked(MouseEvent e) {
 		currentView.clearError();
+		currentView.clearConfirmation();
+		
+		// This gets the data from View as a String
+		// The String should be formatted as such:
+		// If we are in setup phase, it should be <col> <row> <orientation>, e.g. A 1 R
+		// Valid orientations are R and D (right and down)
+		// If we are not in setup phase, it should be <col> <row>, e.g. A 1
+		String entryText = ((JComponent)e.getSource()).getClientProperty("entryText").toString();
+		((JComponent)e.getSource()).putClientProperty("entryText", "");
+		
+		if (entryText.equals("changeView")) {
+			if (currentView instanceof ViewText) {
+				((ViewText) currentView).frame.dispose();
+				currentView = new ViewGUI();
+			} else {
+				currentView = new ViewText();
+			}
+		}
+		
 
 		// If we are not in a transition phase
 		if (model.getTurn() != 3) {
-
-			// This gets the data from View as a String
-			// The String should be formatted as such:
-			// If we are in setup phase, it should be <col> <row> <orientation>, e.g. A 1 R
-			// Valid orientations are R and D (right and down)
-			// If we are not in setup phase, it should be <col> <row>, e.g. A 1
-			String entryText = ((JComponent)e.getSource()).getClientProperty("entryText").toString();
-			((JComponent)e.getSource()).putClientProperty("entryText", "");
 
 			String[] entryTextElements = entryText.split(" ");
 			
@@ -42,7 +53,7 @@ public class Controller implements java.awt.event.MouseListener {
 				return;
 			}
 			row = Integer.parseInt(entryTextElements[1]);
-
+			
 			// If we are in the setup phase, place the ship
 			if (model.isSetup()) {
 
@@ -360,22 +371,14 @@ public class Controller implements java.awt.event.MouseListener {
 	// Required empty methods for the MouseListener interface
 	@Override
 	public void mousePressed(MouseEvent e) {
-		// TODO Auto-generated method stub
-		
 	}
 	@Override
 	public void mouseReleased(MouseEvent e) {
-		// TODO Auto-generated method stub
-		
 	}
 	@Override
 	public void mouseEntered(MouseEvent e) {
-		// TODO Auto-generated method stub
-		
 	}
 	@Override
 	public void mouseExited(MouseEvent e) {
-		// TODO Auto-generated method stub
-		
 	}
 }

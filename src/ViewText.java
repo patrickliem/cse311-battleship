@@ -23,11 +23,11 @@ public class ViewText extends View {
 	public JFrame frame;
 	private JLabel turnIndicator;
 	private JLabel enemyBoard;
-	private JLabel playerBoard;
+	public JLabel playerBoard;
 	private JLabel actionLabel;
-	private JLabel errorLabel;
+	public JLabel errorLabel;
 	private JTextField entryField;
-	private JButton button;
+	public JButton button;
 	
 	// Constructor that sets up the JFrame we will be using for the View
 	public ViewText() {
@@ -264,6 +264,14 @@ public class ViewText extends View {
 		entryField.grabFocus();
 		frame.revalidate();
 		frame.repaint();
+	}
+	
+	// This method can be called by Controller to clear the confirmation box
+	public void clearConfirmation() {
+		errorLabel.setText("");
+		entryField.grabFocus();
+		frame.revalidate();
+		frame.repaint();	
 	}
 	
 	// This method can be called by Controller to clear any error messages
