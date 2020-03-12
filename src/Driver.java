@@ -3,7 +3,7 @@ public class Driver {
 	
 	public static void main(String[] args) {
 		// Change this to ViewText()/ViewGUI() depending on what to test
-		View battleshipView = new ViewText();
+		View battleshipView = new ViewGUI();
 		Model battleshipModel = new Model();
 		
 		battleshipModel.addObserver(battleshipView);

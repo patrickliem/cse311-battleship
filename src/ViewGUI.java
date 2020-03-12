@@ -21,32 +21,31 @@ public class ViewGUI extends View{
 	
 	//messing around with graphics we shall see what happens here
 	private void paintBoards(Graphics g) {
+		
 		//opponent grid 10 x 10 (no labels) filled blue for water
-		 GridLayout oppGrid = new GridLayout(10, 10, 0, 0);
-		 frame.setLayout(oppGrid);
-		 for (int col = 0; col < 10; col++) {
-             for (int row = 0; row < 10; row++) {
-            	 g.setColor(Color.blue);
-                 g.fillRect(col, row, 50, 50);
-                 pane.setBorder(BorderFactory.createLineBorder(Color.black));
-            }
-         }
-		//player grid 10 x 10 (no labels) filled blue for water
-		 GridLayout playerGrid = new GridLayout(10, 10, 0, 0);
-		 frame.setLayout(playerGrid);
-		 for (int col = 0; col < 10; col++) {
-             for (int row = 0; row < 10; row++) {
-            	 g.setColor(Color.blue);
-                 g.fillRect(col, row, 50, 50);
-            }
-         }
+//		 GridLayout oppGrid = new GridLayout(10, 10, 0, 0);
+//		 frame.setLayout(oppGrid);
+//		 for (int col = 0; col < 10; col++) {
+//             for (int row = 0; row < 10; row++) {
+//            	 g.setColor(Color.blue);
+//                 g.fillRect(col, row, 50, 50);
+//                 pane.setBorder(BorderFactory.createLineBorder(Color.black));
+//            }
+//         }
+//		//player grid 10 x 10 (no labels) filled blue for water
+//		 GridLayout playerGrid = new GridLayout(10, 10, 0, 0);
+//		 frame.setLayout(playerGrid);
+//		 for (int col = 0; col < 10; col++) {
+//             for (int row = 0; row < 10; row++) {
+//            	 g.setColor(Color.blue);
+//                 g.fillRect(col, row, 50, 50);
+//            }
+//         }
 	}
 	
 	
 	public ViewGUI() {
 		frame = new JFrame("Battleship (GUI Version)");
-		
-				
 		
 		//size same as ViewText for now
 		frame.setSize(700,700);
@@ -54,6 +53,7 @@ public class ViewGUI extends View{
 		Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
 		frame.setLocation(dim.width/2-frame.getSize().width/2, dim.height/2-frame.getSize().height/2);
 		frame.setVisible(true);
+		
 	}
 	
 	
