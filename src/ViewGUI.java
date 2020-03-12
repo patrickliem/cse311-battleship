@@ -1,17 +1,22 @@
 import javax.swing.BorderFactory;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 
+import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.GridLayout;
 import java.awt.Toolkit;
 import java.awt.event.MouseListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.awt.geom.Rectangle2D;
 import java.util.Observable;
 
 
@@ -19,37 +24,37 @@ public class ViewGUI extends View{
 	public JFrame frame;
 	public JPanel pane;
 	
-	//messing around with graphics we shall see what happens here
-	private void paintBoards(Graphics g) {
-		
-		//opponent grid 10 x 10 (no labels) filled blue for water
-//		 GridLayout oppGrid = new GridLayout(10, 10, 0, 0);
-//		 frame.setLayout(oppGrid);
-//		 for (int col = 0; col < 10; col++) {
-//             for (int row = 0; row < 10; row++) {
-//            	 g.setColor(Color.blue);
-//                 g.fillRect(col, row, 50, 50);
-//                 pane.setBorder(BorderFactory.createLineBorder(Color.black));
-//            }
-//         }
-//		//player grid 10 x 10 (no labels) filled blue for water
-//		 GridLayout playerGrid = new GridLayout(10, 10, 0, 0);
-//		 frame.setLayout(playerGrid);
-//		 for (int col = 0; col < 10; col++) {
-//             for (int row = 0; row < 10; row++) {
-//            	 g.setColor(Color.blue);
-//                 g.fillRect(col, row, 50, 50);
-//            }
-//         }
-	}
-	
 	
 	public ViewGUI() {
+		//Setting the Window
 		frame = new JFrame("Battleship (GUI Version)");
-		
-		//size same as ViewText for now
 		frame.setSize(700,700);
 		frame.addWindowListener(new CloseListener());
+		
+		
+		frame.add(new JPanel() {
+            @Override
+            protected void paintComponent(Graphics g) {
+                Graphics2D g2 = (Graphics2D) g;
+
+                g2.setColor(Color.BLUE);
+                //ocean aka big blue rectangle
+                g2.draw(new Rectangle2D.Double(220, 40, 300, 300));
+                g2.fillRect(220, 40, 300, 300);
+                
+                // makes a grid for the board
+                for (int row = 220; row < 520; row += 30) {
+                	for (int col = 40; col < 340; col += 30) {
+                		g2.setColor(Color.BLACK);
+                		g2.draw(new Rectangle2D.Double(row, col, 30, 30));
+                	}         
+                }
+                
+                
+            }
+        }, BorderLayout.CENTER);
+		
+		//Window
 		Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
 		frame.setLocation(dim.width/2-frame.getSize().width/2, dim.height/2-frame.getSize().height/2);
 		frame.setVisible(true);
