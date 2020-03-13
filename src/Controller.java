@@ -29,6 +29,7 @@ public class Controller implements java.awt.event.MouseListener {
 			} else {
 				currentView = new ViewText();
 			}
+			model.addObserver(currentView);
 		}
 		
 
