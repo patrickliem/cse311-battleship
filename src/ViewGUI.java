@@ -13,6 +13,7 @@ import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.GridBagLayout;
 import java.awt.GridLayout;
 import java.awt.Toolkit;
 import java.awt.event.MouseListener;
@@ -35,78 +36,89 @@ public class ViewGUI extends View{
 		frame.setSize(700,700);
 		frame.addWindowListener(new CloseListener());
 		
-		//drawing player boards
-		frame.add(new JPanel() {
-
-			@Override
-            protected void paintComponent(Graphics g) {
-            	//labels -- they don't show up yet
-            	playerBoard = new JLabel("", SwingConstants.CENTER);
-        		playerBoard.setFont(new Font("Courier New", Font.PLAIN, 12));
-        		enemyBoard = new JLabel("", SwingConstants.CENTER);
-        		enemyBoard.setFont(new Font("Courier New", Font.PLAIN, 12));
-        		
-        		//graphics initialized
-                Graphics2D g2 = (Graphics2D) g;
-                
-          // Set up board -- needs to satisfy set up condition to draw
+		JPanel[][] setup = new JPanel[10][10];
+	    JPanel[][] playerGrid = new JPanel[10][10];
+	    JPanel[][] enemyGrid = new JPanel[10][10];
+	    
+	    for(int i = 0; i < 10; i++) {
+	    	for(int j = 0; j < 10; j++) {
+	    		
+		    }
+	    }
+	    
+	
+		
+//	TO BE DELETED	
+//	    frame.add(new JPanel() {
+//			@Override
+//            protected void paintComponent(Graphics g) {
+//            	//labels -- they don't show up yet
+//            	playerBoard = new JLabel("", SwingConstants.CENTER);
+//        		playerBoard.setFont(new Font("Courier New", Font.PLAIN, 12));
+//        		enemyBoard = new JLabel("", SwingConstants.CENTER);
+//        		enemyBoard.setFont(new Font("Courier New", Font.PLAIN, 12));
+//        		
+//        		//graphics initialized
+//                Graphics2D g2 = (Graphics2D) g;
+//                
+//          // Set up board -- needs to satisfy set up condition to draw
 //                g2.setColor(Color.CYAN);
 //                //ocean aka big blue rectangle
-//                g2.fillRect(220, 150, 300, 300);
+//               g2.fillRect(220, 150, 300, 300);
+//               
+//               // makes a grid for the board
+//               for (int row = 220; row < 520; row += 30) {
+//                	for (int col = 150; col < 450; col += 30) {
+//               		g2.setColor(Color.BLACK);
+//                		g2.draw(new Rectangle2D.Double(row, col, 30, 30));
+//                	}         
+//                }
+//                
+//          //Opponent's board
+//                String theirBoard = "<html>My board:<br> <br></html>";
+//                playerBoard.setText(theirBoard);
+//                g2.setColor(Color.CYAN);
+//                //ocean aka big blue rectangle
+//                g2.fillRect(220, 30, 300, 300);
 //                
 //                // makes a grid for the board
 //                for (int row = 220; row < 520; row += 30) {
-//                	for (int col = 150; col < 450; col += 30) {
+//                	for (int col = 30; col < 330; col += 30) {
 //                		g2.setColor(Color.BLACK);
 //                		g2.draw(new Rectangle2D.Double(row, col, 30, 30));
 //                	}         
 //                }
-                
-          //Opponent's board
-                String theirBoard = "<html>My board:<br> <br></html>";
-                playerBoard.setText(theirBoard);
-                g2.setColor(Color.CYAN);
-                //ocean aka big blue rectangle
-                g2.fillRect(220, 30, 300, 300);
-                
-                // makes a grid for the board
-                for (int row = 220; row < 520; row += 30) {
-                	for (int col = 30; col < 330; col += 30) {
-                		g2.setColor(Color.BLACK);
-                		g2.draw(new Rectangle2D.Double(row, col, 30, 30));
-                	}         
-                }
-                
-          //Player board
-                String myBoard = "<html>My board:<br> <br></html>";
-                playerBoard.setText(myBoard);
-                g2.setColor(Color.blue);
-                //ocean aka big blue rectangle
-                g2.fillRect(220, 350, 300, 300);
-                
-                // makes a grid for the board
-                for (int row = 220; row < 520; row += 30) {
-                	for (int col = 350; col < 650; col += 30) {
-                		g2.setColor(Color.BLACK);
-                		g2.draw(new Rectangle2D.Double(row, col, 30, 30));
-                	}         
-                }
-                
-           //bOaTs example -- if length of boat = 5 on player board
-                //need to determine indiv squares bc this isnt sustainable
-                //if hit --> g2.setColor(Color.red);
-              //if hit --> g2.setColor(Color.BLACK);
-                for (int row = 220; row < 370; row += 30) {
-                	for (int col = 350; col < 380; col += 30) {
-                		g2.setColor(Color.LIGHT_GRAY);
-                        g2.fillRect(row, col, 30, 30);
-                		g2.setColor(Color.BLACK);
-                		g2.draw(new Rectangle2D.Double(row, col, 30, 30));
-                	}
-                }
-                 
-            }
-        }, BorderLayout.CENTER);
+//                
+//          //Player board
+//                String myBoard = "<html>My board:<br> <br></html>";
+//                playerBoard.setText(myBoard);
+//                g2.setColor(Color.blue);
+//                //ocean aka big blue rectangle
+//                g2.fillRect(220, 350, 300, 300);
+//                
+//                // makes a grid for the board
+//                for (int row = 220; row < 520; row += 30) {
+//                	for (int col = 350; col < 650; col += 30) {
+//                		g2.setColor(Color.BLACK);
+//                		g2.draw(new Rectangle2D.Double(row, col, 30, 30));
+//                	}         
+//                }
+//                
+//           //bOaTs example -- if length of boat = 5 on player board
+//                //need to determine indiv squares bc this isnt sustainable
+//                //if hit --> g2.setColor(Color.red);
+//              //if hit --> g2.setColor(Color.BLACK);
+//                for (int row = 220; row < 370; row += 30) {
+//                	for (int col = 350; col < 380; col += 30) {
+//                		g2.setColor(Color.LIGHT_GRAY);
+//                        g2.fillRect(row, col, 30, 30);
+//                		g2.setColor(Color.BLACK);
+//                		g2.draw(new Rectangle2D.Double(row, col, 30, 30));
+//                	}
+//                }
+//                 
+//            }
+//        }, BorderLayout.CENTER);
 		
 		//Window
 		Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
@@ -143,7 +155,7 @@ public class ViewGUI extends View{
 	@Override
 	public void update(Observable o, Object arg) {
 		// TODO Auto-generated method stub
-		
+		//get data from model -- set up phase, turn, etc and render 1 board or 2 depending on turn
 	}
 
 	@Override
