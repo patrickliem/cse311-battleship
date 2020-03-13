@@ -49,7 +49,7 @@ public class ViewGUI extends View{
         		//graphics initialized
                 Graphics2D g2 = (Graphics2D) g;
                 
-          // Set up board -- needs set up condition
+          // Set up board -- needs to satisfy set up condition to draw
 //                g2.setColor(Color.CYAN);
 //                //ocean aka big blue rectangle
 //                g2.fillRect(220, 150, 300, 300);
@@ -93,6 +93,9 @@ public class ViewGUI extends View{
                 }
                 
            //bOaTs example -- if length of boat = 5 on player board
+                //need to determine indiv squares bc this isnt sustainable
+                //if hit --> g2.setColor(Color.red);
+              //if hit --> g2.setColor(Color.BLACK);
                 for (int row = 220; row < 370; row += 30) {
                 	for (int col = 350; col < 380; col += 30) {
                 		g2.setColor(Color.LIGHT_GRAY);
