@@ -1,5 +1,6 @@
 import static org.junit.Assert.*;
 
+import java.awt.Color;
 import java.awt.event.MouseEvent;
 
 import javax.swing.JButton;
@@ -157,7 +158,60 @@ public class BattleshipTest {
 	/* End ViewText tests */
 	
 	/* Begin ViewGUI tests */
+	@Test
+	public void testGUIDisplayError() {
+		viewGUI.displayError("error");
+		
+		assertEquals("<html><div style='color:red;'>&nbsp;&nbsp;error</div></html>", viewGUI.battleErrorLabel.getText());
+		assertEquals("<html><div style='color:red;'>&nbsp;&nbsp;error</div></html>", viewGUI.setupErrorLabel.getText());
+	}
 	
+	@Test
+	public void testGUIClearError() {
+		viewGUI.clearError();
+		
+		assertEquals("", viewGUI.battleErrorLabel.getText());
+		assertEquals("", viewGUI.setupErrorLabel.getText());
+	}
+	
+	@Test
+	public void testGUIDisplayConfirmation() {
+		viewGUI.displayConfirmation("you hit a ship");
+		
+		assertEquals("<html><div style='color:red;'>you hit a ship</div></html>", viewGUI.transitionConfLabel.getText());
+	}
+	
+	@Test
+	public void testGUIClearConfirmation() {
+		viewGUI.clearConfirmation();
+		
+		assertEquals("", viewGUI.transitionConfLabel.getText());
+	}
+	
+	@Test
+	public void testGUIAddController() {
+		viewGUI.addController(controller);
+		// TODO
+		assertEquals(controller, viewGUI.passButton.getMouseListeners()[viewGUI.passButton.getMouseListeners().length - 1]);
+		assertEquals(controller, viewGUI.changeView.getMouseListeners()[viewGUI.changeView.getMouseListeners().length - 1]);
+		
+		for (int  i = 0; i < 11; i++) {
+			for (int j = 0; j < 11; j++) {
+				if (i != 0 && j != 0) {
+					assertEquals(controller, viewGUI.enemyGrid[i][j].getMouseListeners()[viewGUI.enemyGrid[i][j].getMouseListeners().length - 1]);
+					assertEquals(controller, viewGUI.setupGrid[i][j].getMouseListeners()[viewGUI.setupGrid[i][j].getMouseListeners().length - 1]);
+				}
+			}
+		}
+		
+	}
+
+	@Test
+	public void testGUIUpdate() {
+		model.addObserver(viewGUI);
+		model.setBoardValue(1, 1, 1, 'a');
+		assertEquals(viewGUI.setupGrid[2][2].getBackground(), Color.GRAY);
+	}
 	/* End ViewGUI tests */
 
 }

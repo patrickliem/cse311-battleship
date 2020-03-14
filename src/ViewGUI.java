@@ -30,28 +30,28 @@ public class ViewGUI extends View{
 	// Top Panel Components
 	private JPanel topPanel;
 	private JLabel turnLabel;
-	private JButton changeView;
+	public JButton changeView;
 
 	// Battle Phase Components
 	private JPanel[][] playerGrid = new JPanel[11][11];
-	private JPanel[][] enemyGrid = new JPanel[11][11];
+	public JPanel[][] enemyGrid = new JPanel[11][11];
 	private JPanel boardsPanel;
 
 	private JPanel bottomBoardsPanel;
-	private JLabel battleErrorLabel;
+	public JLabel battleErrorLabel;
 
 	// Setup Phase Components
 	private JPanel setupPanel;
-	private JPanel[][] setupGrid = new JPanel[11][11];
+	public JPanel[][] setupGrid = new JPanel[11][11];
 
 	private JPanel bottomSetupPanel;
 	private JLabel setupInstructionsLabel;
-	private JLabel setupErrorLabel;
+	public JLabel setupErrorLabel;
 
 	// Transition Phase Components
 	private JPanel transitionPanel;
-	private JLabel transitionConfLabel;
-	private JButton passButton;
+	public JLabel transitionConfLabel;
+	public JButton passButton;
 
 	// Model representation for easy access
 	private Model data;
