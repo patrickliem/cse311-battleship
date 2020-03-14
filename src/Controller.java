@@ -39,7 +39,8 @@ public class Controller implements java.awt.event.MouseListener {
 			return;
 		}
 		
-		((JComponent)e.getSource()).putClientProperty("entryText", "");
+		if (currentView instanceof ViewText)
+			((JComponent)e.getSource()).putClientProperty("entryText", "");
 		
 
 		// If we are not in a transition phase
