@@ -19,4 +19,3 @@ During the game, you will see two boards: yours and your opponent's. On your boa
 
 At any time, if you wish to change to the text view, you can click the "Change view" button.
 
-During
