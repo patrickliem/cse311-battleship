@@ -1,155 +1,95 @@
 import javax.swing.BorderFactory;
-import javax.swing.ImageIcon;
 import javax.swing.JButton;
-import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+
 import javax.swing.JPanel;
-import javax.swing.SwingConstants;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.Dimension;
-import java.awt.Font;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
-import java.awt.GridBagLayout;
+import java.awt.FlowLayout;
 import java.awt.GridLayout;
 import java.awt.Toolkit;
 import java.awt.event.MouseListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.awt.geom.Rectangle2D;
 import java.util.Observable;
 
 
 public class ViewGUI extends View{
 	public JFrame frame;
-	public JPanel pane;
-	private JLabel enemyBoard;
-	public JLabel playerBoard;
-	
-	
+
+	private JPanel topPanel;
+	private JLabel turnLabel;
+	private JButton changeView;
+
+	private JPanel[][] playerGrid = new JPanel[11][11];
+	private JPanel[][] enemyGrid = new JPanel[11][11];
+	private JPanel boardsPanel;
+	private JLabel boardLabel1, boardLabel2;
+
+
 	public ViewGUI() {
-		//Setting the Window
 		frame = new JFrame("Battleship (GUI Version)");
+
+		// Create the outer wrapper panel of the frame
+		JPanel outer = new JPanel(new BorderLayout());
+
+		// Initialize the top panel of the frame
+		initTopPanel();
+		
+		// Initialize the boards
+		initBoardsPanel();
+
+		// TODO initialize the bottom panel
+
+		// Set up the outer panel and add it to the frame. Maybe replace with drawSetup() later on?
+		outer.add(topPanel, BorderLayout.NORTH);
+		outer.add(boardsPanel, (BorderLayout.CENTER));
+		frame.add(outer);
+
+		// Set up the frame initialization stuff
 		frame.setSize(700,700);
 		frame.addWindowListener(new CloseListener());
-		
-		JPanel[][] setup = new JPanel[10][10];
-	    JPanel[][] playerGrid = new JPanel[10][10];
-	    JPanel[][] enemyGrid = new JPanel[10][10];
-	    
-	    for(int i = 0; i < 10; i++) {
-	    	for(int j = 0; j < 10; j++) {
-	    		
-		    }
-	    }
-	    
-	
-		
-//	TO BE DELETED	
-//	    frame.add(new JPanel() {
-//			@Override
-//            protected void paintComponent(Graphics g) {
-//            	//labels -- they don't show up yet
-//            	playerBoard = new JLabel("", SwingConstants.CENTER);
-//        		playerBoard.setFont(new Font("Courier New", Font.PLAIN, 12));
-//        		enemyBoard = new JLabel("", SwingConstants.CENTER);
-//        		enemyBoard.setFont(new Font("Courier New", Font.PLAIN, 12));
-//        		
-//        		//graphics initialized
-//                Graphics2D g2 = (Graphics2D) g;
-//                
-//          // Set up board -- needs to satisfy set up condition to draw
-//                g2.setColor(Color.CYAN);
-//                //ocean aka big blue rectangle
-//               g2.fillRect(220, 150, 300, 300);
-//               
-//               // makes a grid for the board
-//               for (int row = 220; row < 520; row += 30) {
-//                	for (int col = 150; col < 450; col += 30) {
-//               		g2.setColor(Color.BLACK);
-//                		g2.draw(new Rectangle2D.Double(row, col, 30, 30));
-//                	}         
-//                }
-//                
-//          //Opponent's board
-//                String theirBoard = "<html>My board:<br> <br></html>";
-//                playerBoard.setText(theirBoard);
-//                g2.setColor(Color.CYAN);
-//                //ocean aka big blue rectangle
-//                g2.fillRect(220, 30, 300, 300);
-//                
-//                // makes a grid for the board
-//                for (int row = 220; row < 520; row += 30) {
-//                	for (int col = 30; col < 330; col += 30) {
-//                		g2.setColor(Color.BLACK);
-//                		g2.draw(new Rectangle2D.Double(row, col, 30, 30));
-//                	}         
-//                }
-//                
-//          //Player board
-//                String myBoard = "<html>My board:<br> <br></html>";
-//                playerBoard.setText(myBoard);
-//                g2.setColor(Color.blue);
-//                //ocean aka big blue rectangle
-//                g2.fillRect(220, 350, 300, 300);
-//                
-//                // makes a grid for the board
-//                for (int row = 220; row < 520; row += 30) {
-//                	for (int col = 350; col < 650; col += 30) {
-//                		g2.setColor(Color.BLACK);
-//                		g2.draw(new Rectangle2D.Double(row, col, 30, 30));
-//                	}         
-//                }
-//                
-//           //bOaTs example -- if length of boat = 5 on player board
-//                //need to determine indiv squares bc this isnt sustainable
-//                //if hit --> g2.setColor(Color.red);
-//              //if hit --> g2.setColor(Color.BLACK);
-//                for (int row = 220; row < 370; row += 30) {
-//                	for (int col = 350; col < 380; col += 30) {
-//                		g2.setColor(Color.LIGHT_GRAY);
-//                        g2.fillRect(row, col, 30, 30);
-//                		g2.setColor(Color.BLACK);
-//                		g2.draw(new Rectangle2D.Double(row, col, 30, 30));
-//                	}
-//                }
-//                 
-//            }
-//        }, BorderLayout.CENTER);
-		
-		//Window
 		Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
 		frame.setLocation(dim.width/2-frame.getSize().width/2, dim.height/2-frame.getSize().height/2);
 		frame.setVisible(true);
-		
+
 	}
-	
-	
+
 	@Override
 	public void displayError(String errText) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public void clearError() {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public void displayConfirmation(String confText) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public void addController(MouseListener controller) {
-		// TODO Auto-generated method stub
+		changeView.addMouseListener(controller);
 		
+		for (int i = 0; i < 11; i++) {
+			for (int j = 0; j < 11; j++) {
+				if (i != 0 && j != 0) {
+					playerGrid[i][j].addMouseListener(controller);
+					enemyGrid[i][j].addMouseListener(controller);
+				}
+			}
+		}
+
 	}
 
 	@Override
@@ -161,7 +101,108 @@ public class ViewGUI extends View{
 	@Override
 	public void clearConfirmation() {
 		// TODO Auto-generated method stub
+
+	}
+	
+	// Initializes the components for the top panel
+	private void initTopPanel() {
+		topPanel = new JPanel(new GridLayout(1, 2));
+
+		turnLabel = new JLabel("  Player 1's turn:");
+
+		changeView = new JButton("Change View");
+		changeView.putClientProperty("entryText", "changeView");
+		changeView.setAlignmentX(Component.RIGHT_ALIGNMENT);
+		JPanel topRightPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+		topRightPanel.add(changeView);
+
+		topPanel.add(turnLabel);
+		topPanel.add(topRightPanel);
+	}
+	
+	// Helper method to turn numbers into their column representation on the board
+	private String convertIntToBoardLetter(int n) {
+		switch(n) {
+			case 0:
+				return "";
+			case 1:
+				return "A";
+			case 2:
+				return "B";
+			case 3:
+				return "C";
+			case 4:
+				return "D";
+			case 5:
+				return "E";
+			case 6:
+				return "F";
+			case 7:
+				return "G";
+			case 8:
+				return "H";
+			case 9:
+				return "I";
+			case 10:
+				return "J";
+			default:
+				return "?";
+				
+		}
+	}
+
+	// Initializes the components for the boards panel
+	private void initBoardsPanel() {
+		boardsPanel = new JPanel(new BorderLayout());
+		JPanel playerBoardPanelWrapper = new JPanel(new BorderLayout());
+		JPanel enemyBoardPanelWrapper = new JPanel(new BorderLayout());
 		
+		boardLabel1 = new JLabel("Enemy board: ");
+		boardLabel2 = new JLabel("Your board: ");
+		
+		playerBoardPanelWrapper.add(boardLabel1, BorderLayout.NORTH);
+		enemyBoardPanelWrapper.add(boardLabel2, BorderLayout.NORTH);
+		
+		JPanel playerBoardPanel = new JPanel(new GridLayout(11, 11));
+		JPanel enemyBoardPanel = new JPanel(new GridLayout(11, 11));
+		playerBoardPanel.setPreferredSize(new Dimension(300, 300));
+		enemyBoardPanel.setPreferredSize(new Dimension(300, 300));
+		
+		for(int i = 0; i < 11; i++) {
+			for(int j = 0; j < 11; j++) {
+				JPanel playerPanel = new JPanel();
+				JPanel enemyPanel = new JPanel();
+				
+				if (i == 0) {
+					playerPanel.add(new JLabel(convertIntToBoardLetter(j)));
+					enemyPanel.add(new JLabel(convertIntToBoardLetter(j)));
+				} else if (j == 0 && i != 0) {
+					playerPanel.add(new JLabel("" + i));
+					enemyPanel.add(new JLabel("" + i));
+				} else {
+					playerPanel.setBackground(Color.BLUE);
+					enemyPanel.setBackground(Color.BLUE);
+					
+					playerPanel.putClientProperty("entryText", convertIntToBoardLetter(j) + " " + i);
+					enemyPanel.putClientProperty("entryText", convertIntToBoardLetter(j) + " " + i);
+				}
+				
+				playerPanel.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+				enemyPanel.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+				
+				playerGrid[i][j] = playerPanel;
+				enemyGrid[i][j] = enemyPanel;
+				
+				playerBoardPanel.add(playerGrid[i][j]);
+				enemyBoardPanel.add(enemyGrid[i][j]);
+			}
+		}
+		
+		playerBoardPanelWrapper.add(playerBoardPanel, BorderLayout.SOUTH);
+		enemyBoardPanelWrapper.add(enemyBoardPanel, BorderLayout.SOUTH);
+		
+		boardsPanel.add(playerBoardPanelWrapper, BorderLayout.NORTH);
+		boardsPanel.add(enemyBoardPanelWrapper, BorderLayout.SOUTH);
 	}
 	
 	// Makes sure we exit nicely

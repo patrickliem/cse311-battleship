@@ -13,24 +13,33 @@ public class Controller implements java.awt.event.MouseListener {
 	public void mouseClicked(MouseEvent e) {
 		currentView.clearError();
 		currentView.clearConfirmation();
-		
+				
 		// This gets the data from View as a String
 		// The String should be formatted as such:
 		// If we are in setup phase, it should be <col> <row> <orientation>, e.g. A 1 R
 		// Valid orientations are R and D (right and down)
 		// If we are not in setup phase, it should be <col> <row>, e.g. A 1
-		String entryText = ((JComponent)e.getSource()).getClientProperty("entryText").toString();
-		((JComponent)e.getSource()).putClientProperty("entryText", "");
+		String entryText = ((JComponent)e.getSource()).getClientProperty("entryText").toString();	
 		
+		System.out.println(entryText);
+		
+		// If we get a message from the View to change the view type, do just that
 		if (entryText.equals("changeView")) {
+			
 			if (currentView instanceof ViewText) {
 				((ViewText) currentView).frame.dispose();
 				currentView = new ViewGUI();
 			} else {
+				((ViewGUI) currentView).frame.dispose();
 				currentView = new ViewText();
 			}
 			model.addObserver(currentView);
+			currentView.addController(this);
+			initModel();
+			return;
 		}
+		
+		((JComponent)e.getSource()).putClientProperty("entryText", "");
 		
 
 		// If we are not in a transition phase
@@ -366,7 +375,7 @@ public class Controller implements java.awt.event.MouseListener {
 
 	// Updates the model trivially to make it send a message to observers
 	public void initModel(){
-		model.setBoardValue(1, 1, 1, '~');
+		model.setBoardValue(1, 1, 1, model.getBoardValue(1, 1, 1));
 	}
 	
 	// Required empty methods for the MouseListener interface
