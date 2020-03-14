@@ -20,9 +20,7 @@ public class Controller implements java.awt.event.MouseListener {
 		// Valid orientations are R and D (right and down)
 		// If we are not in setup phase, it should be <col> <row>, e.g. A 1
 		String entryText = ((JComponent)e.getSource()).getClientProperty("entryText").toString();	
-		
-		System.out.println(entryText);
-		
+				
 		// If we get a message from the View to change the view type, do just that
 		if (entryText.equals("changeView")) {
 			

@@ -102,12 +102,11 @@ public class ViewGUI extends View{
 
 		data = (Model)o;
 
-		// Extract relevant information from Model data
-		char[][] player1Board = data.getPlayer1board();
-		char[][] player2Board = data.getPlayer2board();
-
 		// Check if there is a winner
 		if (data.getWinner() != 0) {
+			resetPane();
+			drawTransitionPhase();
+			
 			turnLabel.setText("");
 			displayConfirmation("Player " + data.getWinner() + " wins!");
 			passButton.setVisible(false);
@@ -138,7 +137,68 @@ public class ViewGUI extends View{
 	
 	// TODO Draws the board how it should look during the battle phase
 	private void drawBattlePhase() {
-
+		resetPane();
+		
+		char[][] myBoardArray;
+		char[][] enemyBoardArray;
+		
+		if (data.getTurn() == 1) {
+			myBoardArray = data.getPlayer1board();
+			enemyBoardArray = data.getPlayer2board();
+			turnLabel.setText("Player 1's turn");
+			
+		} else {
+			myBoardArray = data.getPlayer2board();
+			enemyBoardArray = data.getPlayer1board();
+			turnLabel.setText("Player 2's turn");
+		}
+		
+		// Set up the player board
+		for (int i = 0; i < 10; i++) {
+			for (int j = 0; j < 10; j++) {
+				if (myBoardArray[i][j] == '~') {
+					playerGrid[i+1][j+1].setBackground(Color.BLUE);
+				} else if (myBoardArray[i][j] == 'a' ||
+						   myBoardArray[i][j] == 'b' ||
+						   myBoardArray[i][j] == 'c' ||
+						   myBoardArray[i][j] == 'd' ||
+						   myBoardArray[i][j] == 'e') {
+					playerGrid[i+1][j+1].setBackground(Color.GRAY);
+				} else if (myBoardArray[i][j] == 'A' ||
+						   myBoardArray[i][j] == 'B' ||
+						   myBoardArray[i][j] == 'C' ||
+						   myBoardArray[i][j] == 'D' ||
+						   myBoardArray[i][j] == 'E') {
+					playerGrid[i+1][j+1].setBackground(Color.RED);
+				} else if (myBoardArray[i][j] == 'x') {
+					playerGrid[i+1][j+1].setBackground(Color.BLACK);
+				} else if (myBoardArray[i][j] == 'm') {
+					playerGrid[i+1][j+1].setBackground(Color.WHITE);
+				}
+			}
+		}
+		
+		// Set up the enemy board
+		for (int i = 0; i < 10; i++) {
+			for (int j = 0; j < 10; j++) {
+				if (enemyBoardArray[i][j] == 'A' ||
+					enemyBoardArray[i][j] == 'B' ||
+					enemyBoardArray[i][j] == 'C' ||
+					enemyBoardArray[i][j] == 'D' ||
+					enemyBoardArray[i][j] == 'E') {
+					enemyGrid[i+1][j+1].setBackground(Color.RED);
+				} else if (enemyBoardArray[i][j] == 'x') {
+					enemyGrid[i+1][j+1].setBackground(Color.BLACK);
+				} else if (enemyBoardArray[i][j] == 'm') {
+					enemyGrid[i+1][j+1].setBackground(Color.WHITE);
+				} else {
+					enemyGrid[i+1][j+1].setBackground(Color.BLUE);
+				}
+			}
+		}
+		
+		outer.add(boardsPanel, BorderLayout.CENTER);
+		outer.add(bottomBoardsPanel, BorderLayout.SOUTH);
 	}
 	
 
@@ -204,8 +264,8 @@ public class ViewGUI extends View{
 	// This method can be called by Controller to display an error message
 	@Override
 	public void displayError(String errText) {
-		setupErrorLabel.setText("<html><div style='color:red;'>" + errText + "</div></html>");
-		battleErrorLabel.setText("<html><div style='color:red;'>" + errText + "</div></html>");
+		setupErrorLabel.setText("<html><div style='color:red;'>&nbsp;&nbsp;" + errText + "</div></html>");
+		battleErrorLabel.setText("<html><div style='color:red;'>&nbsp;&nbsp;" + errText + "</div></html>");
 
 		frame.revalidate();
 		frame.repaint();
@@ -254,7 +314,6 @@ public class ViewGUI extends View{
 		for (int i = 0; i < 11; i++) {
 			for (int j = 0; j < 11; j++) {
 				if (i != 0 && j != 0) {
-					playerGrid[i][j].addMouseListener(controller);
 					enemyGrid[i][j].addMouseListener(controller);
 					setupGrid[i][j].addMouseListener(controller);
 				}
@@ -323,8 +382,8 @@ public class ViewGUI extends View{
 		JLabel boardLabel1 = new JLabel("  Enemy board: ");
 		JLabel boardLabel2 = new JLabel("  Your board: ");
 
-		playerBoardPanelWrapper.add(boardLabel1, BorderLayout.NORTH);
-		enemyBoardPanelWrapper.add(boardLabel2, BorderLayout.NORTH);
+		playerBoardPanelWrapper.add(boardLabel2, BorderLayout.NORTH);
+		enemyBoardPanelWrapper.add(boardLabel1, BorderLayout.NORTH);
 
 		JPanel playerBoardPanel = new JPanel(new GridLayout(11, 11));
 		JPanel enemyBoardPanel = new JPanel(new GridLayout(11, 11));
@@ -346,7 +405,6 @@ public class ViewGUI extends View{
 					playerPanel.setBackground(Color.BLUE);
 					enemyPanel.setBackground(Color.BLUE);
 
-					playerPanel.putClientProperty("entryText", convertIntToBoardLetter(j) + " " + i);
 					enemyPanel.putClientProperty("entryText", convertIntToBoardLetter(j) + " " + i);
 				}
 
@@ -364,8 +422,8 @@ public class ViewGUI extends View{
 		playerBoardPanelWrapper.add(playerBoardPanel, BorderLayout.SOUTH);
 		enemyBoardPanelWrapper.add(enemyBoardPanel, BorderLayout.SOUTH);
 
-		boardsPanel.add(playerBoardPanelWrapper, BorderLayout.NORTH);
-		boardsPanel.add(enemyBoardPanelWrapper, BorderLayout.SOUTH);
+		boardsPanel.add(enemyBoardPanelWrapper, BorderLayout.NORTH);
+		boardsPanel.add(playerBoardPanelWrapper, BorderLayout.SOUTH);
 	}
 
 
